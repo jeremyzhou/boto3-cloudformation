@@ -14,10 +14,12 @@ usage: create-stack.py [-h] --name NAME --templateurl TEMPLATEURL --params
 arguments:
   -h, --help            show this help message and exit
   --name NAME           the name of the stack to create.
+  --accesskey           AWS access key.
+  --secretkey           AWS secret key.
+  --region              AWS region.
   --templateurl TEMPLATEURL
                         the url where the stack template can be fetched.
   --params PARAMS       the key value pairs for the parameters of the stack.
-  --topicarn TOPICARN   the SNS topic arn for notifications to be sent to.
   --log LOG             which log level. DEBUG, INFO, WARNING, CRITICAL
   --tags TAGS           the tags to attach to the stack.
   --config CONFIG       the config file used for the application.
@@ -33,7 +35,7 @@ arguments:
 And an example:
 
 ```
-$ python create-stack.py  --name newstack01  --templateurl https://raw.githubusercontent.com/dronzebot/dronze-qlearn/master/cicd/cloudformation/ec2_instance_sg.json?token=AAY5LkQG0d0G4Uql5Y8T-74L2BuGjKfNks5Y7kTAwA%3D%3D --params "KeyName=dronze-oregon-dev&InstanceType=t2.small"   --tags "name=newstack01&roo=mar"    --topicarn arn:aws:sns:us-west-2:705212546939:dronze-qlearn-cf
+$ python create-stack.py --name jeremytest01 --accesskey ***** --secretkey ***** --region us-east-2 --templateurl https://raw.githubusercontent.com/sonicwall/sonicwall-nsv-aws-cf-templates/master/single-ami/cf-new-vpc.template  --params "ProjectName=SonicWallNSv&AvailabilityZone=us-east-2a&AmiId=ami-0da41ab17ddbecefa&InstanceName=SonicWallNSv&InstanceType=c5.large&KeyPairName=JeremyZhou&ManagementWhitelistCidr=0.0.0.0/0&WanIfaceSubnetName=NSvWANInterface&WanIfaceSubnetCidr=192.168.0.0/24&LanIfaceSubnetName=NSvLANInterface&LanIfaceSubnetCidr=192.168.1.0/24&VpcName=NSvVPC&VpcCidr=192.168.0.0/16&ExistingEipAllocationId= " --tags "name=JeremyStack01"
 INFO       2017-04-05 08:17:07,009 make_cloudformation_client           50  : using default config.
 INFO       2017-04-05 08:17:07,041 load                                 628 : Found credentials in shared credentials file: ~/.aws/credentials
 INFO       2017-04-05 08:17:07,675 _new_conn                            735 : Starting new HTTPS connection (1): cloudformation.us-west-2.amazonaws.com
@@ -51,6 +53,9 @@ usage: delete-stack.py [-h] --name NAME [--retain RETAIN] [--log LOG]
 arguments:
   -h, --help       show this help message and exit
   --name NAME      the name of the stack to create.
+  --accesskey           AWS access key.
+  --secretkey           AWS secret key.
+  --region              AWS region.
   --retain RETAIN  the names (comma separated) of the resources to retain.
   --log LOG        which log level. DEBUG, INFO, WARNING, CRITICAL
   --config CONFIG  the config file used for the application
@@ -59,7 +64,7 @@ arguments:
 And an example:
 
 ```
-$ python delete-stack.py --name newstack01
+$ python delete-stack.py --name jeremytest01 --accesskey ***** --secretkey ***** --region us-east-2
 
 INFO       2017-04-04 18:03:17,576 make_cloudformation_client           50  : using default config.
 INFO       2017-04-04 18:03:17,677 load                                 628 : Found credentials in shared credentials file: ~/.aws/credentials

@@ -24,6 +24,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--name', type=str, required=True,
                        help='the name of the stack to create.')
+    parser.add_argument('--accesskey', type=str, required=True,
+                       help='AWS access key.')    
+    parser.add_argument('--secretkey', type=str, required=True,
+                       help='AWS secret key.')
+    parser.add_argument('--region', type=str, required=True,
+                       help='AWS region.')                       
     parser.add_argument('--retain', type=str, required=False,
                        help='the names (comma separated) of the resources to retain.')
     parser.add_argument('--log', type=str, default="INFO", required=False,
@@ -37,7 +43,7 @@ def main():
     logging.basicConfig(level=get_log_level(args.log), format=LOG_FORMAT)
 
     #load the client using app config or default
-    client = make_cloudformation_client(args.config)
+    client = make_cloudformation_client(args.accesskey,args.secretkey,args.region)
 
     try:
         retained_resources = []
