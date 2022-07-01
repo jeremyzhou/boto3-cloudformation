@@ -7,13 +7,14 @@ import logging
 import argparse
 import boto3
 import botocore
-import urllib2
+import urllib3
+import urllib
 import botocore
 import sys
 import time
 import signal
 
-from urlparse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs
 from utils import make_cloudformation_client, load_config, get_log_level
 
 
@@ -55,14 +56,12 @@ def get_json(url, data_obj=None):
             querystring = urllib.urlencode(data_obj)
             url_final = "{0}?{1}".format(url,querystring)
         get_headers={'Content-Type': 'application/json'}
-        req = urllib2.Request(url_final, headers=get_headers)
-        response = urllib2.urlopen(req)
-        print 'RESPONSE:', response
-        json_response = response.read()
-        print json_response
-        return json.loads(json_response)
+        data = urllib.request.urlopen(url_final).read()
+        json_response = json.loads(data)
+        print (json_response)
+        return json_response
     except urllib2.HTTPError as e:
-        print e
+        print (e)
         return None
 
 def main():
@@ -70,11 +69,11 @@ def main():
     parser.add_argument('--name', type=str, required=True,
                        help='the name of the stack to create.')
     parser.add_argument('--accesskey', type=str, required=True,
-                       help='AWS access key.')    
+                       help='AWS access key.')
     parser.add_argument('--secretkey', type=str, required=True,
                        help='AWS secret key.')
     parser.add_argument('--region', type=str, required=True,
-                       help='AWS region.')                       
+                       help='AWS region.')
     parser.add_argument('--templateurl', type=str, required=True,
                        help='the url where the stack template can be fetched.')
     parser.add_argument('--params', type=str, required=True,
@@ -96,7 +95,7 @@ def main():
     #load the client using app config or default
     #client = make_cloudformation_client(args.config)
     client = make_cloudformation_client(args.accesskey,args.secretkey,args.region)
-    
+
     try:
         template_object = get_json(args.templateurl)
         params = make_kv_from_args(args.params, "Parameter", False)
@@ -109,7 +108,6 @@ def main():
             TimeoutInMinutes=2,
             Tags=tags
         )
-
         # we expect a response, if its missing on non 200 then show response
         if 'ResponseMetadata' in response and \
             response['ResponseMetadata']['HTTPStatusCode'] < 300:

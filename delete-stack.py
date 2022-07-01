@@ -6,13 +6,13 @@ import json
 import logging
 import argparse
 import boto3
-import urllib2
+import urllib3
 import botocore
 import sys
 import time
 import signal
 
-from urlparse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs
 from utils import make_cloudformation_client, load_config, get_log_level
 
 LOG_FORMAT = ('%(levelname) -10s %(asctime)s %(funcName) '
@@ -25,11 +25,11 @@ def main():
     parser.add_argument('--name', type=str, required=True,
                        help='the name of the stack to create.')
     parser.add_argument('--accesskey', type=str, required=True,
-                       help='AWS access key.')    
+                       help='AWS access key.')
     parser.add_argument('--secretkey', type=str, required=True,
                        help='AWS secret key.')
     parser.add_argument('--region', type=str, required=True,
-                       help='AWS region.')                       
+                       help='AWS region.')
     parser.add_argument('--retain', type=str, required=False,
                        help='the names (comma separated) of the resources to retain.')
     parser.add_argument('--log', type=str, default="INFO", required=False,
